@@ -1,0 +1,52 @@
+app:
+  title: Backstage
+  baseUrl: https://backstage.134.209.138.125.nip.io
+
+organization:
+  name: My Company
+frontend:
+
+backend:
+  baseUrl: https://backstage.134.209.138.125.nip.io
+  listen:
+    port: 5000
+  csp:
+    connect-src: ["'self'", 'http:', 'https:']
+  cors:
+    origin: https://backstage.134.209.138.125.nip.io
+    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    credentials: true
+  database:
+    client: better-sqlite3
+    connection: ':memory:'
+
+integrations:
+  gitea:
+    - host: gitea.134.209.138.125.nip.io
+      password: ${GITEA_SECRET}
+  reading:
+    allow: 
+      - host: gitea.134.209.138.125.nip.io
+proxy:
+techdocs:
+  builder: 'local'
+  generator:
+    runIn: 'local'
+  publisher:
+    type: 'local'
+
+catalog:
+  import:
+    entityFilename: catalog-info.yaml
+    pullRequestBranchName: backstage-integration
+  rules:
+    - allow: [Component, System, API, Resource, Location, Template]
+  locations:
+    - type: file
+      target: ./software-templates/create-nestjs-application.yaml
+    - type: file
+      target: ./software-templates/create-react-application.yaml
+    - type: file
+      target: ./software-templates/create-dev-workload.yaml
+    - type: file
+      target: ./software-templates/create-prod-workload.yaml

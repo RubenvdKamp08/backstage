@@ -1,0 +1,56 @@
+kind: pipeline
+type: kubernetes
+name: build
+steps:
+  - name: build-push
+    image: plugins/docker:linux-amd64
+    environment:
+      DOCKER_BUILDKIT: 1
+    settings:
+      registry: harbor.134.209.138.125.nip.io
+      repo: harbor.134.209.138.125.nip.io/team-admin/backstage
+      insecure: true
+      username:
+        from_secret: REGISTRY_USERNAME
+      password:
+        from_secret: REGISTRY_PASSWORD
+      tags:
+        - ${DRONE_BUILD_NUMBER}
+        - latest
+
+---
+kind: pipeline
+type: kubernetes
+name: update-docker
+clone:
+  disable: true
+steps:
+  - name: clone-workload
+    image: plugins/git
+    commands:
+      - git clone https://gitea.134.209.138.125.nip.io/otomi/argo-workload.git .
+  - name: update-docker-tag
+    image: alpine/git
+    commands:
+      - sed -i 's/backstage:.*/backstage:'"${DRONE_BUILD_NUMBER}"'/g' ./backstage/deployment.yaml
+
+  - name: git-config
+    image: alpine/git
+    commands:
+      - git config --global user.name "Drone CI"
+      - git config --global user.email "bot@drone.com"
+  - name: git-push
+    image: appleboy/drone-git-push
+    settings:
+      branch: master
+      remote: https://gitea.134.209.138.125.nip.io/otomi/argo-workload.git
+      username: otomi-admin
+      password: WKiy1990YC1A4p39E0xs
+      force: true
+      commit: true
+      commit_message: "Update backstage with docker image ${DRONE_BUILD_NUMBER}"
+      author_name: droneCI
+      author_email: gitea@local.domain
+
+depends_on:
+- build

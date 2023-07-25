@@ -1,0 +1,64 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: create-nestjs-application
+  title: Create Nest.js application
+  description: Golden path to create a nestjs application that will scaffold the repository
+  tags:
+    - service
+    - nodejs
+    - goldenpath
+    - repository
+  links:
+    - url: https://gitea.134.209.138.125.nip.io/otomi/backstage/src/branch/master/software-templates/create-nestjs-application.yaml
+      title: Gitea
+      icon: location
+      type: Gitea
+    - url: https://backstage.io/docs/features/software-templates/writing-templates/
+      title: Docs
+      icon: techdocs
+      type: Documentation
+spec:
+  owner: development guilt
+  type: Golden path
+
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: Service name
+      required:
+        - name
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Unique name of the application
+          ui:autofocus: true
+          ui:options:
+            rows: 5
+
+  # These steps are executed in the scaffolder backend, using data that we gathered
+  # via the parameters above.
+  steps:
+    # This step publishes the contents of the working directory to GitHub.
+    - id: create-repo
+      name: Create git repository
+      action: publish:gitea
+      input:
+        name: ${{ parameters.name }}
+        template: nestjs
+    - id: register
+      name: Register in catalog
+      action: catalog:register
+      input:
+        catalogInfoUrl: 'https://gitea.134.209.138.125.nip.io/otomi-admin/${{ parameters.name }}/src/branch/master/catalog-info.yaml'
+  output:
+    links:
+      - title: Repository
+        url: 'https://gitea.134.209.138.125.nip.io/otomi-admin/${{ parameters.name }}'
+      - title: Sync repository in DroneCI
+        url: 'https://drone.134.209.138.125.nip.io'
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}

@@ -1,0 +1,28 @@
+site_name: Platform documentation
+
+nav:
+  - Home: index.md
+  - User Guide:
+    - Getting Started: guide/getting-started.md
+    - Creating applications: guide/create-applications.md
+    - Deploy applications: guide/deploy-applications.md
+    - Logging: guide/logging.md
+    - Observability: guide/observability.md
+    - Application exposure: guide/expose.md
+  - Tutorials:
+    - Deploy react application: tutorials/react-application.md
+    - Deploy nestjs application: tutorials/nest-application.md
+    - Get logs nestjs application: tutorials/application-logs.md
+  - Tools and features:
+    - Overview: tools/overview.md
+  - Golden paths:
+    - Create react application: golden_paths/create-react.md
+    - Create nestjs application: golden_paths/create-nest.md
+    - Create development workload: golden_paths/create-development.md
+    - Create production workload: golden_paths/create-production.md
+  - Change logs:
+    - Version 0.1: logs/version0-1.md
+  - About: about.md
+
+plugins:
+  - techdocs-core
