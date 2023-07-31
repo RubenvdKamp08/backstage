@@ -40,7 +40,7 @@
     "express": "^4.17.1",
     "express-promise-router": "^4.1.0",
     "git-url-parse": "^13.1.0",
-    "pg": "^8.3.0",
+    "pg": "^8.11.1",
     "simple-git": "^3.19.1",
     "winston": "^3.2.1",
     "yeoman-environment": "^3.19.3"
